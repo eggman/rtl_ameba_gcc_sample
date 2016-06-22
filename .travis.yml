@@ -10,9 +10,6 @@ matrix:
     - os: linux
       sudo: false
       env: GCC_VER=4.9
-    - os: osx
-      osx_image: xcode7
-      sudo: true
 
 cache:
   directories:
@@ -21,16 +18,14 @@ cache:
 addons:
   apt:
     sources:
-    - kubuntu-backports
     - ubuntu-toolchain-r-test
-    - george-edison55-precise-backports
     packages:
     - build-essential
+    - ccache
     - cmake
     - gcc-4.9
     - libc6-i386
     - python-empy
-    - zlib1g-dev
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
@@ -45,15 +40,7 @@ before_install:
       && . ~/.profile
       && popd
       ;
-    elif [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-         brew tap PX4/homebrew-px4
-      && brew update; brew update
-      && brew install cmake ninja
-      && brew install genromfs
-      && sudo easy_install pip
-      && sudo pip install empy
-      ;
-    fi
+   fi
 
 before_script:
 # setup ccache
@@ -72,9 +59,10 @@ before_script:
 
 
 script:
-  - echo make..' && make 
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cd ${TRAVIS_BUILD_DIR}
-      && arm-none-eabi-gcc --version
-      ;
-    fi
+  - ccache -z
+  - arm-none-eabi-gcc --version
+  - make archives
+  - ccache -s
+  - make
+  - ccache -s
+ 
