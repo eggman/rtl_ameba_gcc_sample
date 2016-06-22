@@ -1,0 +1,80 @@
+
+language: c
+
+matrix:
+  fast_finish: true
+  include:
+    - os: linux
+      sudo: false
+      env: GCC_VER=4.8
+    - os: linux
+      sudo: false
+      env: GCC_VER=4.9
+    - os: osx
+      osx_image: xcode7
+      sudo: true
+
+cache:
+  directories:
+    - $HOME/.ccache
+
+addons:
+  apt:
+    sources:
+    - kubuntu-backports
+    - ubuntu-toolchain-r-test
+    - george-edison55-precise-backports
+    packages:
+    - build-essential
+    - cmake
+    - gcc-4.9
+    - libc6-i386
+    - python-empy
+    - zlib1g-dev
+
+before_install:
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         pushd .
+      && cd ~ && mkdir gcc && cd gcc
+      && if [ "$GCC_VER" = "4.8" ]; then GCC_URL="https://launchpadlibrarian.net/186124160/gcc-arm-none-eabi-4_8-2014q3-20140805-linux.tar.bz2" ; fi
+      && if [ "$GCC_VER" = "4.9" ]; then GCC_URL="https://launchpad.net/gcc-arm-embedded/4.9/4.9-2014-q4-major/+download/gcc-arm-none-eabi-4_9-2014q4-20141203-linux.tar.bz2" ; fi
+      && wget -O gcc.tar.bz2 ${GCC_URL}
+      && tar -jxf gcc.tar.bz2 --strip 1
+      && exportline="export PATH=$HOME/gcc/bin:\$PATH"
+      && if grep -Fxq "$exportline" ~/.profile; then echo nothing to do ; else echo $exportline >> ~/.profile; fi
+      && . ~/.profile
+      && popd
+      ;
+    elif [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+         brew tap PX4/homebrew-px4
+      && brew update; brew update
+      && brew install cmake ninja
+      && brew install genromfs
+      && sudo easy_install pip
+      && sudo pip install empy
+      ;
+    fi
+
+before_script:
+# setup ccache
+  - mkdir -p ~/bin
+  - ln -s /usr/bin/ccache ~/bin/arm-none-eabi-g++
+  - ln -s /usr/bin/ccache ~/bin/arm-none-eabi-gcc
+  - ln -s /usr/bin/ccache ~/bin/arm-none-eabi-size
+  - ln -s /usr/bin/ccache ~/bin/arm-none-eabi-objcopy
+  - ln -s /usr/bin/ccache ~/bin/clang++
+  - ln -s /usr/bin/ccache ~/bin/clang++-3.4
+  - ln -s /usr/bin/ccache ~/bin/clang++-3.5
+  - ln -s /usr/bin/ccache ~/bin/clang
+  - ln -s /usr/bin/ccache ~/bin/clang-3.4
+  - ln -s /usr/bin/ccache ~/bin/clang-3.5
+  - export PATH=~/bin:$PATH
+
+
+script:
+  - echo make..' && make 
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         cd ${TRAVIS_BUILD_DIR}
+      && arm-none-eabi-gcc --version
+      ;
+    fi
