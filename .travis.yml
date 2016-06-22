@@ -61,7 +61,6 @@ before_script:
 script:
   - ccache -z
   - arm-none-eabi-gcc --version
-  - make archives
   - ccache -s
   - make
   - ccache -s
