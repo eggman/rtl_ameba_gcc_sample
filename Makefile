@@ -32,7 +32,6 @@ CFLAGS += -mthumb
 CFLAGS += -c -nostartfiles -fno-short-enums
 CFLAGS += -Wall -Wpointer-arith -Wstrict-prototypes -Wundef
 CFLAGS += -Wno-write-strings
-CFLAGS += --save-temps
 CFLAGS += -MMD -MP
 CFLAGS += -fno-common -fmessage-length=0 -fno-exceptions 
 CFLAGS += -ffunction-sections -fdata-sections
@@ -69,8 +68,7 @@ makebin/ram_all.bin: $(OUTPUT_PATH)/target.axf
 $(OUTPUT_PATH)/target.axf: $(addprefix $(OUTPUT_PATH)/,$(C_OBJ))
 	echo build all objects
 	$(CC) $(ELF_FLAGS) -o $(OUTPUT_PATH)/target.axf -Wl,--start-group $^ -Wl,--end-group $(ELF_LDLIBS)
-	-@mv *.i $(OUTPUT_PATH)/
-	-@mv *.s $(OUTPUT_PATH)/
+	$(SIZE) $(OUTPUT_PATH)/target.axf 
 
 $(addprefix $(OUTPUT_PATH)/,$(C_OBJ)): $(OUTPUT_PATH)/%.o: %.c
 	@echo "$(CC) -c $(CFLAGS) $< -o $@"
