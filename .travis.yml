@@ -21,13 +21,13 @@ addons:
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          pushd .
-      && cd ~ && mkdir gcc && cd gcc
+      && mkdir gcc && cd gcc
       && if [ "$GCC_VER" = "4.8" ]; then GCC_URL="https://launchpadlibrarian.net/186124160/gcc-arm-none-eabi-4_8-2014q3-20140805-linux.tar.bz2" ; fi
       && if [ "$GCC_VER" = "4.9" ]; then GCC_URL="https://launchpad.net/gcc-arm-embedded/4.9/4.9-2014-q4-major/+download/gcc-arm-none-eabi-4_9-2014q4-20141203-linux.tar.bz2" ; fi
       && wget -O gcc.tar.bz2 ${GCC_URL}
       && tar -jxf gcc.tar.bz2 --strip 1
-      && ls -l ~/gcc/bin
-      && exportline="export PATH=\$HOME/gcc/bin:\$PATH"
+      && ls -l bin
+      && exportline="export PATH=\$PWD/bin:\$PATH"
       && if grep -Fxq "$exportline" ~/.profile; then echo nothing to do ; else echo $exportline >> ~/.profile; fi
       && . ~/.profile
       && popd
@@ -35,7 +35,7 @@ before_install:
    fi
 
 install:
-  - ls -l ~/gcc/bin
+  - ls -l gcc/bin
   - printenv PATH
 
 before_script:
