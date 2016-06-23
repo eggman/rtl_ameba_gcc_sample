@@ -17,6 +17,9 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - build-essential
+    - lib32bz2-1.0
+    - lib32ncurses5
+    - lib32z1
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
