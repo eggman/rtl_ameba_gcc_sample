@@ -12,7 +12,6 @@ matrix:
       env: GCC_VER=4.9
 
 cache:
-  apt: true
   directories:
     - $HOME/.ccache
 
@@ -24,6 +23,9 @@ addons:
     - build-essential
     - ccache
     - cmake
+    - gcc-4.9
+    - libc6-i836
+    - python-empy
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
