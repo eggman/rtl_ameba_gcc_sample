@@ -17,7 +17,7 @@ matrix:
 addons:
   apt:
     packages:
-    - libc6-386 
+    - libc6-i386 
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
