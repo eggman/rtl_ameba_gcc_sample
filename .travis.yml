@@ -34,7 +34,7 @@ before_install:
       && if [ "$GCC_VER" = "4.9" ]; then GCC_URL="https://launchpad.net/gcc-arm-embedded/5.0/5-2016-q1-update/+download/gcc-arm-none-eabi-5_3-2016q1-20160330-linux.tar.bz2" ; fi
       && wget -O gcc.tar.bz2 ${GCC_URL}
       && tar -jxf gcc.tar.bz2 --strip 1
-      && exportline="export PATH=\$HOME/bin:\$PATH"
+      && exportline="export PATH=\$HOME/gcc/bin:\$PATH"
       && if grep -Fxq "$exportline" ~/.profile; then echo nothing to do ; else echo $exportline >> ~/.profile; fi
       && . ~/.profile
       && popd
