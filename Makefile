@@ -18,7 +18,6 @@ SDK_SRC_BASE_PATH = sdk/src
 vpath %.c ./src
 vpath %.c $(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a
 
-
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/cmsis
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/hal/target_rtk/target_8195a
@@ -41,8 +40,6 @@ CFLAGS += -O2 $(INCLUDES) -D$(CHIP)
 
 ASFLAGS = -mcpu=cortex-m3 -mthumb -Wall -a -g $(INCLUDES)
 
-
-
 C_SRC+=$(wildcard $(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a/app_start.c)
 C_SRC+=$(wildcard src/*.c)
 
@@ -53,9 +50,8 @@ C_OBJ_FILTER=
 
 C_OBJ=$(filter-out $(C_OBJ_FILTER), $(C_OBJ_TEMP))
 
-
 ELF_FLAGS= -O2 -Wl,--gc-sections -mcpu=cortex-m3 -mthumb --specs=nano.specs
-ELF_FLAGS+= -Lsdk/lib -Lsdk/scripts -T./sdk/scripts/rlx8195a.ld -Wl,-Map=build/target.map 
+ELF_FLAGS+= -Lsdk/lib -Lsdk/scripts -Tsdk/scripts/rlx8195a.ld -Wl,-Map=$(OUTPUT_PATH)/target.map 
 ELF_FLAGS+= -Wl,--cref -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common 
 
 ELF_LDLIBS= sdk/lib/startup.o -l_platform -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
@@ -74,15 +70,13 @@ $(addprefix $(OUTPUT_PATH)/,$(C_OBJ)): $(OUTPUT_PATH)/%.o: %.c
 	@echo "$(CC) -c $(CFLAGS) $< -o $@"
 	@"$(CC)" -c $(CFLAGS) $< -o $@
 
-
 clean:
 	@echo clean
-	-@$(RM) ./build/target.* 1>$(DEV_NUL) 2>&1
-	-@$(RM) ./build/*.d 1>$(DEV_NUL) 2>&1
-	-@$(RM) ./build/*.o 1>$(DEV_NUL) 2>&1
-	-@$(RM) ./build/*.i 1>$(DEV_NUL) 2>&1
-	-@$(RM) ./build/*.s 1>$(DEV_NUL) 2>&1
+	-@$(RM) $(OUTPUT_PATH)/target.* 1>$(DEV_NUL) 2>&1
+	-@$(RM) $(OUTPUT_PATH)/*.d 1>$(DEV_NUL) 2>&1
+	-@$(RM) $(OUTPUT_PATH)/*.o 1>$(DEV_NUL) 2>&1
+	-@$(RM) $(OUTPUT_PATH)/*.i 1>$(DEV_NUL) 2>&1
+	-@$(RM) $(OUTPUT_PATH)/*.s 1>$(DEV_NUL) 2>&1
 	-@$(RM) ./makebin/target* 1>$(DEV_NUL) 2>&1
 	-@$(RM) ./makebin/*.bin 1>$(DEV_NUL) 2>&1
-
 
