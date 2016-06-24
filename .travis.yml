@@ -14,11 +14,10 @@ matrix:
       sudo: false
       env: GCC_VER=5.0
 
-
 addons:
   apt:
     packages:
-    - lib32ncurses5
+    - libc6-386 
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
