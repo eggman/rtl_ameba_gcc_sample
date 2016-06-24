@@ -17,10 +17,7 @@ matrix:
 
 addons:
   apt:
-    sources:
-    - ubuntu-toolchain-r-test
     packages:
-    - build-essential
     - lib32ncurses5
 
 before_install:
@@ -45,3 +42,5 @@ before_script:
 script:
   - make
  
+notifications:
+  email: false
