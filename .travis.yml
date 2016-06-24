@@ -21,9 +21,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - build-essential
-    - lib32bz2-1.0
     - lib32ncurses5
-    - lib32z1
 
 before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
@@ -31,7 +29,7 @@ before_install:
       && cd ~ && mkdir gcc && cd gcc
       && if [ "$GCC_VER" = "4.8" ]; then GCC_URL="https://launchpadlibrarian.net/186124160/gcc-arm-none-eabi-4_8-2014q3-20140805-linux.tar.bz2" ; fi
       && if [ "$GCC_VER" = "4.9" ]; then GCC_URL="https://launchpad.net/gcc-arm-embedded/4.9/4.9-2015-q3-update/+download/gcc-arm-none-eabi-4_9-2015q3-20150921-linux.tar.bz2" ; fi
-      && if [ "$GCC_VER" = "4.9" ]; then GCC_URL="https://launchpad.net/gcc-arm-embedded/5.0/5-2016-q1-update/+download/gcc-arm-none-eabi-5_3-2016q1-20160330-linux.tar.bz2" ; fi
+      && if [ "$GCC_VER" = "5.0" ]; then GCC_URL="https://launchpad.net/gcc-arm-embedded/5.0/5-2016-q1-update/+download/gcc-arm-none-eabi-5_3-2016q1-20160330-linux.tar.bz2" ; fi
       && wget -O gcc.tar.bz2 ${GCC_URL}
       && tar -jxf gcc.tar.bz2 --strip 1
       && exportline="export PATH=\$HOME/gcc/bin:\$PATH"
