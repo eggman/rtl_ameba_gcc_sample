@@ -145,7 +145,6 @@ SECTIONS
     {
       *(.ARM.exidx* .gnu.linkonce.armexidx.*)
 
-        . = ALIGN(4);
         /* All data end */
         __data_end__ = .;
 	 __ram_image2_text_end__ = .;    
