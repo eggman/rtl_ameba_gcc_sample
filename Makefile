@@ -52,7 +52,7 @@ C_OBJ=$(filter-out $(C_OBJ_FILTER), $(C_OBJ_TEMP))
 
 ELF_FLAGS= -O2 -Wl,--gc-sections -mcpu=cortex-m3 -mthumb --specs=nano.specs
 ELF_FLAGS+= -Lsdk/lib -Lsdk/scripts -Tsdk/scripts/rlx8195a.ld -Wl,-Map=$(OUTPUT_PATH)/target.map 
-ELF_FLAGS+= -Wl,--cref -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common 
+ELF_FLAGS+= -Wl,--cref -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--no-enum-size-warning
 
 ELF_LDLIBS= sdk/lib/startup.o -l_platform -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
 
