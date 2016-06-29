@@ -22,6 +22,8 @@ INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/cmsis
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/hal/target_rtk/target_8195a
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/hal/target_rtk/target_8195a/rtl8195a
+INCLUDES += -I$(SDK_SRC_BASE_PATH)/sw/lib/sw_lib/mbed/hal
+INCLUDES += -I$(SDK_SRC_BASE_PATH)/sw/lib/sw_lib/mbed/targets/hal/rtl8195a/
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/sw/os
 
 OUTPUT_PATH=build
