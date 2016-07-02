@@ -9,6 +9,7 @@ RM=rm -f
 CROSS_COMPILE = arm-none-eabi-
 AR = $(CROSS_COMPILE)ar
 CC = $(CROSS_COMPILE)gcc
+CPP = $(CROSS_COMPILE)g++
 AS = $(CROSS_COMPILE)as
 NM = $(CROSS_COMPILE)nm
 SIZE = $(CROSS_COMPILE)size
@@ -17,6 +18,7 @@ SDK_SRC_BASE_PATH = sdk/src
 
 vpath %.c ./src
 vpath %.c $(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a
+vpath %.cpp ./src
 
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/cmsis
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a
@@ -40,17 +42,33 @@ CFLAGS += -fomit-frame-pointer
 CFLAGS += -std=gnu99
 CFLAGS += -O2 $(INCLUDES) -D$(CHIP)
 
+CPPFLAGS = -g -mcpu=cortex-m3
+CPPFLAGS += -mthumb
+CPPFLAGS += -c -nostartfiles -fno-short-enums
+CPPFLAGS += -Wall -Wpointer-arith -Wundef
+CPPFLAGS += -Wno-write-strings
+CPPFLAGS += -MMD -MP
+CPPFLAGS += -fno-common -fmessage-length=0 -fno-exceptions 
+CPPFLAGS += -ffunction-sections -fdata-sections
+CPPFLAGS += -fomit-frame-pointer 
+CPPFLAGS += -O2 $(INCLUDES) -D$(CHIP)
+
+
 ASFLAGS = -mcpu=cortex-m3 -mthumb -Wall -a -g $(INCLUDES)
 
 C_SRC+=$(wildcard $(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a/app_start.c)
 C_SRC+=$(wildcard src/*.c)
+CPP_SRC=$(wildcard src/*.cpp)
 
 C_OBJ_TEMP=$(patsubst %.c, %.o, $(notdir $(C_SRC)))
+CPP_OBJ_TEMP=$(patsubst %.cpp, %.o, $(notdir $(CPP_SRC)))
 
 # during development, remove some files
 C_OBJ_FILTER=
+CPP_OBJ_FILTER=
 
 C_OBJ=$(filter-out $(C_OBJ_FILTER), $(C_OBJ_TEMP))
+CPP_OBJ=$(filter-out $(CPP_OBJ_FILTER), $(CPP_OBJ_TEMP))
 
 ELF_FLAGS= -O2 -Wl,--gc-sections -mcpu=cortex-m3 -mthumb --specs=nano.specs
 ELF_FLAGS+= -Lsdk/lib -Lsdk/scripts -Tsdk/scripts/rlx8195a.ld -Wl,-Map=$(OUTPUT_PATH)/target.map 
@@ -63,7 +81,7 @@ all: makebin/ram_all.bin
 makebin/ram_all.bin: $(OUTPUT_PATH)/target.axf
 	cd ./makebin && /bin/bash ./makebin.sh
 
-$(OUTPUT_PATH)/target.axf: $(addprefix $(OUTPUT_PATH)/,$(C_OBJ))
+$(OUTPUT_PATH)/target.axf: $(addprefix $(OUTPUT_PATH)/,$(C_OBJ)) $(addprefix $(OUTPUT_PATH)/,$(CPP_OBJ))
 	echo build all objects
 	$(CC) $(ELF_FLAGS) -o $(OUTPUT_PATH)/target.axf -Wl,--start-group $^ -Wl,--end-group $(ELF_LDLIBS)
 	$(SIZE) $(OUTPUT_PATH)/target.axf 
@@ -71,6 +89,10 @@ $(OUTPUT_PATH)/target.axf: $(addprefix $(OUTPUT_PATH)/,$(C_OBJ))
 $(addprefix $(OUTPUT_PATH)/,$(C_OBJ)): $(OUTPUT_PATH)/%.o: %.c
 	@echo "$(CC) -c $(CFLAGS) $< -o $@"
 	@"$(CC)" -c $(CFLAGS) $< -o $@
+
+$(addprefix $(OUTPUT_PATH)/,$(CPP_OBJ)): $(OUTPUT_PATH)/%.o: %.cpp
+	@echo "$(CPP) -c $(CPPFLAGS) $< -o $@"
+	@"$(CPP)" -c $(CPPFLAGS) $< -o $@
 
 clean:
 	@echo clean
