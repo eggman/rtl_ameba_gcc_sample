@@ -18,7 +18,7 @@ SDK_SRC_BASE_PATH = sdk/src
 
 vpath %.c ./src
 vpath %.c $(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a
-vpath %.cpp ./src
+vpath %.cc ./src
 
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/cmsis
 INCLUDES += -I$(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a
@@ -58,10 +58,10 @@ ASFLAGS = -mcpu=cortex-m3 -mthumb -Wall -a -g $(INCLUDES)
 
 C_SRC+=$(wildcard $(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a/app_start.c)
 C_SRC+=$(wildcard src/*.c)
-CPP_SRC=$(wildcard src/*.cpp)
+CPP_SRC=$(wildcard src/*.cc)
 
 C_OBJ_TEMP=$(patsubst %.c, %.o, $(notdir $(C_SRC)))
-CPP_OBJ_TEMP=$(patsubst %.cpp, %.o, $(notdir $(CPP_SRC)))
+CPP_OBJ_TEMP=$(patsubst %.cc, %.o, $(notdir $(CPP_SRC)))
 
 # during development, remove some files
 C_OBJ_FILTER=
@@ -90,7 +90,7 @@ $(addprefix $(OUTPUT_PATH)/,$(C_OBJ)): $(OUTPUT_PATH)/%.o: %.c
 	@echo "$(CC) -c $(CFLAGS) $< -o $@"
 	@"$(CC)" -c $(CFLAGS) $< -o $@
 
-$(addprefix $(OUTPUT_PATH)/,$(CPP_OBJ)): $(OUTPUT_PATH)/%.o: %.cpp
+$(addprefix $(OUTPUT_PATH)/,$(CPP_OBJ)): $(OUTPUT_PATH)/%.o: %.cc
 	@echo "$(CPP) -c $(CPPFLAGS) $< -o $@"
 	@"$(CPP)" -c $(CPPFLAGS) $< -o $@
 
