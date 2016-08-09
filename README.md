@@ -12,6 +12,10 @@ $ make
 ...
 genrate makebin/ram_all.bin
 ```
+program ram_all.bin to ameba. ( [Programming the RTL8710 via DAP](https://github.com/eggman/RTL8710_DOC/blob/master/ProgrammingRTL8710.md) )
+
+
+
 
 # support chips
 * RTL8195AM
@@ -39,8 +43,9 @@ genrate makebin/ram_all.bin
 * Ethernet
 * SDIO Host
 * SDIO Device
+* NFC
 
-features depend on sdk/lib/lib_platform.a .
+Features depend on sdk/lib/lib_platform.a .
 
 # other
 
