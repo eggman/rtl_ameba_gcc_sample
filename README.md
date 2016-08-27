@@ -12,6 +12,15 @@ $ make
 ...
 genrate makebin/ram_all.bin
 ```
+
+* When use SDRAM (for RTL8195AM or RTL8711AM)
+
+```
+$ make SDRAM=true
+...
+genrate makebin/ram_all.bin
+```
+
 program ram_all.bin to ameba. ( [Programming the RTL8710 via DAP](https://github.com/eggman/RTL8710_DOC/blob/master/ProgrammingRTL8710.md) )
 
 
@@ -35,7 +44,7 @@ program ram_all.bin to ameba. ( [Programming the RTL8710 via DAP](https://github
 * ADC (RTL8195AM only)
 * DAC (RTL8195AM only)
 * SDRAM (RTL8195AM and RTL8711AM only)
-* I2S (HAL only)
+* I2S (only HAL support)
 
 ## not support
 * Wi-Fi

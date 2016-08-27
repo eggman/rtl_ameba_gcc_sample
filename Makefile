@@ -17,6 +17,7 @@ SIZE = $(CROSS_COMPILE)size
 SDK_SRC_BASE_PATH = sdk/src
 
 vpath %.c ./src
+vpath %.c $(SDK_SRC_BASE_PATH)/targets/hal/target_rtk/target_8195a
 vpath %.c $(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a
 vpath %.cc ./src
 
@@ -56,6 +57,10 @@ CPPFLAGS += -O2 $(INCLUDES) -D$(CHIP)
 
 ASFLAGS = -mcpu=cortex-m3 -mthumb -Wall -a -g $(INCLUDES)
 
+ifeq ($(SDRAM), true)
+else
+C_SRC+=$(wildcard $(SDK_SRC_BASE_PATH)/targets/hal/target_rtk/target_8195a/hal_sdr_controller.c)
+endif
 C_SRC+=$(wildcard $(SDK_SRC_BASE_PATH)/targets/cmsis/target_rtk/target_8195a/app_start.c)
 C_SRC+=$(wildcard src/*.c)
 CPP_SRC=$(wildcard src/*.cc)
@@ -74,7 +79,11 @@ ELF_FLAGS= -O2 -Wl,--gc-sections -mcpu=cortex-m3 -mthumb --specs=nano.specs
 ELF_FLAGS+= -Lsdk/lib -Lsdk/scripts -Tsdk/scripts/rlx8195a.ld -Wl,-Map=$(OUTPUT_PATH)/target.map 
 ELF_FLAGS+= -Wl,--cref -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--no-enum-size-warning
 
+ifeq ($(SDRAM), true)
+ELF_LDLIBS= sdk/lib/startup.o sdk/lib/hal_sdr_controller.o -l_platform -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
+else
 ELF_LDLIBS= sdk/lib/startup.o -l_platform -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
+endif
 
 all: makebin/ram_all.bin
 
